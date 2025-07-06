@@ -30,51 +30,63 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class DicePage extends StatelessWidget {
+class DicePage extends StatefulWidget {
   const DicePage({super.key});
 
   @override
+  State<DicePage> createState() => _DicePageState();
+}
+
+class _DicePageState extends State<DicePage> {
+  static const int numberOfDices = 3;
+  late List<int> dices;
+
+  @override
+  void initState() {
+    super.initState();
+    _rollAll();
+  }
+
+  void _rollAll() {
+    setState(() {
+      dices = List.generate(numberOfDices, (_) => Random().nextInt(6) + 1);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [DiceImage(), DiceImage()],
+        children: List.generate(
+          numberOfDices,
+          (index) => DiceImage(number: dices[index], onPressed: _rollAll),
+        ),
       ),
     );
   }
 }
 
-class DiceImage extends StatefulWidget {
-  const DiceImage({super.key});
+class DiceImage extends StatelessWidget {
+  final int number;
+  final VoidCallback onPressed;
 
-  @override
-  State<DiceImage> createState() => _DiceImageState();
-}
+  const DiceImage({super.key, required this.number, required this.onPressed});
 
-class _DiceImageState extends State<DiceImage> {
   @override
   Widget build(BuildContext context) {
-    int number = _getNumber();
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(10.0),
         child: TextButton(
           style: TextButton.styleFrom(
             splashFactory: NoSplash.splashFactory,
             overlayColor: Colors.transparent,
           ),
-          onPressed: () {
-            setState(() {
-              number = _getNumber();
-            });
-          },
+          onPressed: onPressed,
           child: Image(image: AssetImage('images/dice$number.png')),
         ),
       ),
     );
-  }
-
-  int _getNumber() {
-    return Random().nextInt(6) + 1;
   }
 }
