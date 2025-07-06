@@ -48,9 +48,18 @@ class DiceImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(child: Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Image(image: AssetImage('images/dice$number.png')),
-    ));
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: TextButton(
+          style: TextButton.styleFrom(
+            splashFactory: NoSplash.splashFactory,
+            overlayColor: Colors.transparent,
+          ),
+          onPressed: () {},
+          child: Image(image: AssetImage('images/dice$number.png')),
+        ),
+      ),
+    );
   }
 }
