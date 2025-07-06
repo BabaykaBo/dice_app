@@ -38,7 +38,7 @@ class DicePage extends StatefulWidget {
 }
 
 class _DicePageState extends State<DicePage> {
-  static const int numberOfDices = 3;
+  int numberOfDices = 3;
   late List<int> dices;
 
   @override
@@ -53,16 +53,45 @@ class _DicePageState extends State<DicePage> {
     });
   }
 
+  void _selectNumberOfDices(int newNumber) {
+    setState(() {
+      numberOfDices = newNumber;
+      _rollAll();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(
-          numberOfDices,
-          (index) => DiceImage(number: dices[index], onPressed: _rollAll),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        DropdownButton<int>(
+          dropdownColor: Colors.red[300],
+          value: numberOfDices,
+          items: const [1, 2, 3, 4, 5, 6].map((count) {
+            return  DropdownMenuItem<int>(
+              value: count,
+              child: Text('$count dice', style: TextStyle(
+                color: Colors.white60,
+                fontSize: 18
+              ),),
+            );
+          }).toList(),
+          onChanged: (int? value) {
+            if (value != null) {
+              _selectNumberOfDices(value);
+            }
+          },
         ),
-      ),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: List.generate(
+            numberOfDices,
+            (index) => DiceImage(number: dices[index], onPressed: _rollAll),
+          ),
+        ),
+      ],
     );
   }
 }
