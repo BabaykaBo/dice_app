@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        body: DicePage(),
+        body: const DicePage(),
       ),
     );
   }
@@ -33,21 +35,26 @@ class DicePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [DiceImage(number: 1), DiceImage(number: 2)],
+        children: [DiceImage(), DiceImage()],
       ),
     );
   }
 }
 
-class DiceImage extends StatelessWidget {
-  final int number;
-  const DiceImage({super.key, required this.number});
+class DiceImage extends StatefulWidget {
+  const DiceImage({super.key});
 
   @override
+  State<DiceImage> createState() => _DiceImageState();
+}
+
+class _DiceImageState extends State<DiceImage> {
+  @override
   Widget build(BuildContext context) {
+    int number = _getNumber();
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -56,10 +63,18 @@ class DiceImage extends StatelessWidget {
             splashFactory: NoSplash.splashFactory,
             overlayColor: Colors.transparent,
           ),
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              number = _getNumber();
+            });
+          },
           child: Image(image: AssetImage('images/dice$number.png')),
         ),
       ),
     );
+  }
+
+  int _getNumber() {
+    return Random().nextInt(6) + 1;
   }
 }
